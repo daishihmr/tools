@@ -1,1 +1,2 @@
-(tex)[http://daishihmr.github.io/tools/tex.html]
+[tex](http://daishihmr.github.io/tools/tex.html)
+

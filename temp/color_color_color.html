@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+ 
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+ 
+        <title>color color color</title>
+        <meta name="description" content="" />
+
+        <style>body {
+    background-color: rgb(240, 240, 250);
+}
+
+h1 {
+    color: #444;
+    font-size: 23px;
+    font-family: 'Lucida Grande','Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+}</style>
+
+        <script src="http://cdn.rawgit.com/phi-jp/tmlib.js/0.5.2/build/tmlib.js"></script>
+		<script>tm.game.setup({
+    title: "color color color"
+});
+
+W = SCREEN_WIDTH;
+H = SCREEN_HEIGHT;
+CX = W*0.5;
+CY = H*0.5;
+
+tm.define("GameScene", {
+    superClass: "Scene",
+    init: function() {
+        this.superInit();
+        this.fromJSON({
+            children: {
+                label: {
+                    type: "Label",
+                    init: ["", 30],
+                    x: CX,
+                    y: CY + 100,
+                    fillStyle: "black"
+                },
+                cells: {
+                    type: "CanvasElement",
+                    children: [
+                        {
+                            type: "RectangleShape",
+                            init: { width: 100, height: 70, strokeStyle: "transparent" },
+                            y: CY,
+                            interactive: true,
+                        },
+                        {
+                            type: "RectangleShape",
+                            init: { width: 100, height: 70, strokeStyle: "transparent" },
+                            y: CY,
+                            interactive: true,
+                        },
+                        {
+                            type: "RectangleShape",
+                            init: { width: 100, height: 70, strokeStyle: "transparent" },
+                            y: CY,
+                            interactive: true,
+                        },
+                        {
+                            type: "RectangleShape",
+                            init: { width: 100, height: 70, strokeStyle: "transparent" },
+                            y: CY,
+                            interactive: true,
+                        },
+                        {
+                            type: "RectangleShape",
+                            init: { width: 100, height: 70, strokeStyle: "transparent" },
+                            y: CY,
+                            interactive: true,
+                        },
+                    ]
+                }
+            }
+        });
+        
+        var self = this;
+        this.cells.children.forEach(function(rect, i) {
+            rect.x = 100 + i * 110;
+            rect.on("pointingend", function() {
+                if (i == self.rightAnswer) self.score += 1;
+                self.next();
+            });
+        });
+        
+        this.score = 0;
+        this.step = -1;
+        this.rightAnswer = -1;
+        this.delta = 14;
+        
+        this.next();
+    },
+    next: function() {
+        this.step += 1;
+        if (this.step == 10) {
+            this.exit({
+                nextArguments: { score: this.score }
+            });
+            return;
+        }
+        this.delta -= 1;
+        this.label.text = "正解数:{0} ({1} / 10)".format(this.score, this.step + 1);
+        
+        var d = this.delta;
+        var r = this.rightAnswer = Math.rand(0, 4);
+        var rnd = Math.rand(0, 360);
+        this.cells.children.forEach(function(rect, i) {
+            if (i == r) {
+                rect.fillStyle = "hsl({0}, 80%, 50%)".format(rnd + d);
+            } else {
+                rect.fillStyle = "hsl({0}, 80%, 50%)".format(rnd);
+            }
+        });
+    },
+});
+</script>
+    </head>
+    <body>
+        <canvas id="world"></canvas>
+    </body>
+</html>
